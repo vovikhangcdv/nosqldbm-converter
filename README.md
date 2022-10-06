@@ -32,7 +32,7 @@ This package is freely distributable under the terms of the [MIT license](https:
 [npm-version-image]: https://img.shields.io/npm/v/nosqldbm-converter.svg?style=flat
 
 [npm-downloads-image]: https://img.shields.io/npm/dm/nosqldbm-converter.svg?style=flat
-[npm-downloads-url]: https://npmcharts.com/compare/nosqldbm-converter?minimal=true
+[npm-downloads-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Fvovikhangcdv%2Fnosqldbm-converter?ref=badge_large
 
 [fossa-badge-image]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Fvovikhangcdv%2Fnosqldbm-converter.svg?type=shield
 [fossa-badge-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Fvovikhangcdv%2Fnosqldbm-converter?ref=badge_shield
