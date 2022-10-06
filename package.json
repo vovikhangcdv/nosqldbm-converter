@@ -1,0 +1,33 @@
+{
+  "name": "nosqldbm-converter",
+  "version": "1.0.1",
+  "description": "Convert https://nosqldbm.ru/ JSON data to Moongose Schema.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --timeout 10000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vovikhangcdv/nosqldbm-converter.git"
+  },
+  "keywords": [
+    "convert",
+    "nosqldbm",
+    "mongoose",
+    "schema",
+    "mongodb"
+  ],
+  "author": "doublevkay",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vovikhangcdv/nosqldbm-converter/issues"
+  },
+  "homepage": "https://github.com/vovikhangcdv/nosqldbm-converter#readme",
+  "dependencies": {
+    "assert": "^2.0.0",
+    "mocha": "^10.0.0"
+  }
+}
