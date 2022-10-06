@@ -1,6 +1,6 @@
 {
   "name": "nosqldbm-converter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Convert https://nosqldbm.ru/ JSON data to Moongose Schema.",
   "main": "index.js",
   "directories": {
