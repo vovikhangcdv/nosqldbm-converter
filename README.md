@@ -5,7 +5,7 @@
 [![MIT License][license-image]][license-url]
 [![FOSSA Status][fossa-badge-image]][fossa-badge-url]
 
-Convert https://nosqldbm.ru/ JSON data to Moongose Schema.
+Convert https://nosqldbm.ru/ JSON data to Mongoose Schema.
 
 # Getting started
 1. Design your database on https://nosqldbm.ru/.
