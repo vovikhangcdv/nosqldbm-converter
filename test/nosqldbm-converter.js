@@ -1,23 +1,56 @@
 const assert = require('assert')
 const convert = require('../source/convert.js');
 const convertType = require('../source/convertType.js');
-const convertElement = require('../source/convertElement.js');
+const convertCollection = require('../source/convertCollection.js');
 
 
 describe("Convert https://nosqldbm.ru/ JSON data to Moongose Schema.", function () {
-    describe("ConvertType", function () {
-        it("should return [type, null] if type is not Array or Enum", function () {
-            assert.deepEqual(convertType("String"), ["String", null]);
+    describe("convertType", function () {
+        it("should return String", function () {
+            assert.deepEqual(convertType("String"), "String");
         });
-        it("should return [[type], null] if type is Array", function () {
-            assert.deepEqual(convertType("Array<String>"), [["String"], null]);
+        it("should return Number", function () {
+            assert.deepEqual(convertType("Integer"), "Number");
         });
-        it("should return [type, enumData] if type is Enum", function () {
-            assert.deepEqual(convertType("Enum{a,b,c}"), ["String", ["a", "b", "c"]]);
+        it("should return Date", function () {
+            assert.deepEqual(convertType("Date"), "Date");
+        });
+        it("should return Boolean", function () {
+            assert.deepEqual(convertType("Boolean"), "Boolean");
+        });
+        it("should return ObjectId", function () {
+            assert.deepEqual(convertType("ObjectId"), "ObjectId");
+        });
+        it("should return Array", function () {
+            assert.deepEqual(convertType("Array"), []);
+        });
+        it("should return []", function () {
+            assert.deepEqual(convertType("[]"), []);
+        });
+        it("should return Object", function () {
+            assert.deepEqual(convertType("Object"), "Object");
+        });
+        it("should return Double", function () {
+            assert.deepEqual(convertType("Double"), "Double");
+        });
+        it("should return Mixed", function () {
+            assert.deepEqual(convertType("Mixed"), "Mixed");
+        });
+        it("should return Array of type", function () {
+            assert.deepEqual(convertType("[String]"), ["String"]);
+        });
+        it("should return Array of array", function () {
+            assert.deepEqual(convertType("[[]]"), [[]]);
+        });
+        it("should return Array of array string", function () {
+            assert.deepEqual(convertType("[[String]]"), [["String"]]);
+        });
+        it("should return whatever type", function () {
+            assert.deepEqual(convertType("Whatever"), "Whatever");
         });
     });
 
-    describe("ConvertElement", function () {
+    describe("convertCollection", function () {
         it("should ignore _id field", function () {
             const input = {
                 "schemaType": "Collection",
@@ -43,7 +76,7 @@ describe("Convert https://nosqldbm.ru/ JSON data to Moongose Schema.", function 
                     },
                 ]
             }
-            assert.deepEqual(convertElement(input), { User: {} });
+            assert.deepEqual(convertCollection(input), { User: {} });
         });
 
         it("should convert correct type, required and unique value", function () {
@@ -84,11 +117,11 @@ describe("Convert https://nosqldbm.ru/ JSON data to Moongose Schema.", function 
             }
             const expect = {
                 User: {
-                    name: { type: 'String', required: true, unique: false },
-                    email: { type: 'String', required: true, unique: true }
+                    name: { type: 'String', required: true, unique: false, default: "" },
+                    email: { type: 'String', required: true, unique: true, default: "" }
                 }
             }
-            assert.deepEqual(convertElement(input), expect);
+            assert.deepEqual(convertCollection(input), expect);
         });
 
         it("should convert correct defaultValue", function () {
@@ -121,40 +154,7 @@ describe("Convert https://nosqldbm.ru/ JSON data to Moongose Schema.", function 
                     name: { type: 'String', required: true, unique: false, default: 'John' },
                 }
             }
-            assert.deepEqual(convertElement(input), expect);
-        });
-
-        it("should convert correct enum value", function () {
-            const input = {
-                "schemaType": "Collection",
-                "name": "User",
-                "type": "ObjectId",
-                "required": true,
-                "unique": true,
-                "defaultValue": "",
-                "description": "",
-                "index": 0,
-                "customProps": [],
-                "fields": [
-                    {
-                        "schemaType": "Field",
-                        "name": "type",
-                        "type": "Enum{Public,Private}",
-                        "required": true,
-                        "unique": true,
-                        "defaultValue": "",
-                        "description": "",
-                        "index": 0,
-                        "customProps": []
-                    }
-                ]
-            }
-            const expect = {
-                User: {
-                    type: { type: 'String', required: true, unique: true, enum: ['Public', 'Private'] }
-                }
-            }
-            assert.deepEqual(convertElement(input), expect);
+            assert.deepEqual(convertCollection(input), expect);
         });
 
         it("should convert correct array value", function () {
@@ -172,7 +172,7 @@ describe("Convert https://nosqldbm.ru/ JSON data to Moongose Schema.", function 
                     {
                         "schemaType": "Field",
                         "name": "type",
-                        "type": "Array<String>",
+                        "type": "[String]",
                         "required": true,
                         "unique": true,
                         "defaultValue": "",
@@ -183,7 +183,7 @@ describe("Convert https://nosqldbm.ru/ JSON data to Moongose Schema.", function 
                     {
                         "schemaType": "Field",
                         "name": "type2",
-                        "type": "Array<Array>",
+                        "type": "[[]]",
                         "required": true,
                         "unique": true,
                         "defaultValue": "",
@@ -195,16 +195,16 @@ describe("Convert https://nosqldbm.ru/ JSON data to Moongose Schema.", function 
             }
             const expect = {
                 Task: {
-                    type: { type: ['String'], required: true, unique: true },
-                    type2: { type: [[]], required: true, unique: true }
+                    type: { type: ['String'], required: true, unique: true, default: "" },
+                    type2: { type: [[]], required: true, unique: true, default: "" }
                 }
             }
-            assert.deepEqual(convertElement(input), expect);
+            assert.deepEqual(convertCollection(input), expect);
         }
         );
     });
 
-    describe("Convert", function () {
+    describe("convert", function () {
         it("should convert correct seperated object", function () {
             const input = {
                 "schemaType": "Collection",
@@ -243,8 +243,8 @@ describe("Convert https://nosqldbm.ru/ JSON data to Moongose Schema.", function 
             }
             const expect = {
                 User: {
-                    name: { type: 'String', required: true, unique: false },
-                    email: { type: 'String', required: true, unique: true }
+                    name: { type: 'String', required: true, unique: false, default: "" },
+                    email: { type: 'String', required: true, unique: true, default: "" }
                 }
             }
             assert.deepEqual(convert(input), expect);
@@ -301,7 +301,7 @@ describe("Convert https://nosqldbm.ru/ JSON data to Moongose Schema.", function 
                         {
                             "schemaType": "Field",
                             "name": "type",
-                            "type": "Array<String>",
+                            "type": "[String]",
                             "required": true,
                             "unique": true,
                             "defaultValue": "",
@@ -312,7 +312,7 @@ describe("Convert https://nosqldbm.ru/ JSON data to Moongose Schema.", function 
                         {
                             "schemaType": "Field",
                             "name": "type2",
-                            "type": "Array<Array>",
+                            "type": "[[]]",
                             "required": true,
                             "unique": true,
                             "defaultValue": "",
@@ -326,14 +326,14 @@ describe("Convert https://nosqldbm.ru/ JSON data to Moongose Schema.", function 
             const expect = [
                 {
                     User: {
-                        name: { type: 'String', required: true, unique: false },
-                        email: { type: 'String', required: true, unique: true }
+                        name: { type: 'String', required: true, unique: false, default: "" },
+                        email: { type: 'String', required: true, unique: true, default: "" }
                     }
                 },
                 {
                     Task: {
-                        type: { type: ['String'], required: true, unique: true },
-                        type2: { type: [[]], required: true, unique: true }
+                        type: { type: ['String'], required: true, unique: true, default: "" },
+                        type2: { type: [[]], required: true, unique: true, default: "" }
                     }
                 }
             ]

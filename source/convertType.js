@@ -1,19 +1,29 @@
-module.exports = function convertType(type) {
-    const arrayRegex = /Array<(.+)>/;
-    const enumRegex = /Enum{(.+)}/;
-    if (type.match(arrayRegex)) {
-        return [[convertType(type.match(arrayRegex)[1])[0]], null];
+module.exports = function convertType(type){
+    if (type.match(/\[(.+)\]/)){
+        return [convertType(type.match(/\[(.+)\]/)[1])];
     }
-    if (type.match(enumRegex)) {
-        return ["String", type.match(enumRegex)[1].split(",")];
+    switch (type) {
+        case "String":
+            return "String";
+        case "Integer":
+            return "Number";
+        case "Date":
+            return "Date";
+        case "Boolean":
+            return "Boolean";
+        case "ObjectId":
+            return "ObjectId";
+        case "Array":
+            return [];
+        case "[]":
+            return [];
+        case "Object":
+            return "Object";
+        case "Double":
+            return "Double";
+        case "Mixed":
+            return "Mixed";
+        default:
+            return type;
     }
-    if (type === "Integer") {
-        return ["Number", null];
-    }
-
-    if (type === "Array") {
-        return [[], null];
-    }
-    
-    return [type, null];
 }

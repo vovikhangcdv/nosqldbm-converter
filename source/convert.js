@@ -1,14 +1,14 @@
-const convertElement = require("./convertElement.js");
+const convertCollection = require("./convertCollection.js");
 
 module.exports = function convert(data) {
     if (Array.isArray(data)) {
         var arraySchemas = [];
-        data.forEach(function (element) {
-            arraySchemas.push(convertElement(element));
+        data.forEach(function (Collection) {
+            arraySchemas.push(convertCollection(Collection));
         })
         return arraySchemas;
     }
     if (typeof (data) === "object") {
-        return convertElement(data);
+        return convertCollection(data);
     }
 }
